@@ -1,32 +1,36 @@
-## Put comments here that give an overall description of what your
-## functions do
+## makeCacheMatrix -> creates a wrapper around a matrix that allows its inverse 
+# to be stored, effectively a list that contans the following functions:
+# - setx: allows to overwrite the matrix and will reset the inverse
+# - getx: returns the matrix x
+# - setinvmat: sets the inverted matrix, if so desired
+# - getinvmat: returns the inverted matrix
 
-## Write a short comment describing this function
-# z = generate x random numbers for matrix 
-# y = take square root of numbers to be able to generate a square, invertible matrix
+ 
 makeCacheMatrix <- function(x = matrix()) {
-    #z <- runif(x) 
-    z <- sample(1:100, x)  
-    y <- sqrt(length(z)) 
-    mymat <- function(){
-        mtx <- matrix(z,nrow = y, ncol = y)
-        mymatcache <- return(mtx)
+    inv <- NULL
+    setx <- function(y){
+        x <<-y
+        inv <<- NULL
     }
-    setinvmat <- solve(mymat())
-    getinvmat <- function() setinvmat
-    list(mymat = mymat, setinvmat = setinvmat, getinvmat = getinvmat)
-} 
+    getx <- function() x
+    setinvmat <- function(myinvmat) inv <<- myinvmat
+    getinvmat <- function() inv
+    list(setx = setx, getx = getx, setinvmat = setinvmat, getinvmat = getinvmat)
+}       
 
-
-
-## Write a short comment describing this function
-
+## cacheSolve -> takes the matrix from makeCacheMatrix and returns its inverse 
+# matrix. First checks whether its already cached in the makeCacheMatrix, if so,
+# shows the message and returns it.
+# Else, it calculates the inverse matrix, and caches it.
 cacheSolve <- function(x, ...) {
-    #invmat <- x$getinversemat()
-    #if(!is.null(invmat)){
-        #message("getting cached data")
-        #return(invmat)
-    }
-    
-    ## Return a matrix that is the inverse of 'x'
+    invmat <- x$getinvmat()
+    if(!is.null(invmat)){
+        message("getting cached data")
+        return(invmat)
+    } 
+    mat <- x$getx()
+    invmat <- solve(mat)
+    x$setinvmat(invmat)
+    invmat
 }
+    
