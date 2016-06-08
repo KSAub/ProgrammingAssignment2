@@ -2,13 +2,21 @@
 ## functions do
 
 ## Write a short comment describing this function
-
+# z = generate x random numbers for matrix 
+# y = take square root of numbers to be able to generate a square, invertible matrix
 makeCacheMatrix <- function(x = matrix()) {
-    #Computing the inverse of a square matrix can be done with the solve 
-    #function in R. For example, if X is a square invertible matrix, 
-    #then solve(X) returns its inverse.
-    #For this assignment, assume that the matrix supplied is always invertible.
-}
+    #z <- runif(x) 
+    z <- sample(1:100, x)  
+    y <- sqrt(length(z)) 
+    mymat <- function(){
+        mtx <- matrix(z,nrow = y, ncol = y)
+        mymatcache <- return(mtx)
+    }
+    setinvmat <- solve(mymat())
+    getinvmat <- function() setinvmat
+    list(mymat = mymat, setinvmat = setinvmat, getinvmat = getinvmat)
+} 
+
 
 
 ## Write a short comment describing this function
